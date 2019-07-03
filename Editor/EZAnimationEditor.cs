@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     public abstract class EZAnimationEditor : Editor
     {

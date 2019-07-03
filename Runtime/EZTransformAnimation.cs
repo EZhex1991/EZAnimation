@@ -6,7 +6,7 @@
 using System;
 using UnityEngine;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     [DisallowMultipleComponent]
     public class EZTransformAnimation : EZAnimation<EZTransformAnimationSegment>

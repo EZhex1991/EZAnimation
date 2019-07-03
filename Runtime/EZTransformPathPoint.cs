@@ -5,7 +5,7 @@
  */
 using UnityEngine;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     [DisallowMultipleComponent]
     public class EZTransformPathPoint : MonoBehaviour

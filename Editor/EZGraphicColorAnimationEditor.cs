@@ -6,7 +6,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     [CustomEditor(typeof(EZGraphicColorAnimation), true), CanEditMultipleObjects]
     public class EZGraphicColorAnimationEditor : EZAnimationEditor

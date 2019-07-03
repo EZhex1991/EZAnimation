@@ -5,7 +5,7 @@
  */
 using UnityEngine.Playables;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     public class EZAnimationPlayableBehaviour : PlayableBehaviour
     {

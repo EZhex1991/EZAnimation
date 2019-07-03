@@ -6,7 +6,7 @@
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     [TrackClipType(typeof(EZAnimationClip))]
     [TrackBindingType(typeof(EZRectTransformAnimation))]

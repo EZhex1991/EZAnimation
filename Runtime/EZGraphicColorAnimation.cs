@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     public class EZGraphicColorAnimation : EZAnimation<EZColorAnimationSegment>
     {

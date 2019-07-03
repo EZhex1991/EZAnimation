@@ -6,7 +6,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
-namespace EZUnity.Animation
+namespace EZhex1991.EZAnimation
 {
     public class EZAnimationClip : PlayableAsset
     {
