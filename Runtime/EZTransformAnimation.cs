@@ -4,11 +4,11 @@
  * Description:     
  */
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace EZUnity.Animation
 {
+    [DisallowMultipleComponent]
     public class EZTransformAnimation : EZAnimation<EZTransformAnimationSegment>
     {
         public enum PathMode
@@ -29,78 +29,89 @@ namespace EZUnity.Animation
             }
         }
 
+        [Header("Path")]
         [SerializeField]
         private PathMode m_PathMode = PathMode.Linear;
         public PathMode pathMode { get { return m_PathMode; } set { m_PathMode = value; } }
 
         protected override void OnSegmentUpdate()
         {
-            switch (pathMode)
+            if (targetTransform != null)
             {
-                case PathMode.Linear:
-                    OnLinearUpdate();
-                    break;
-                case PathMode.Bezier:
-                    OnBezierUpdate();
-                    break;
+                Vector3 position = targetTransform.position;
+                Quaternion rotation = targetTransform.rotation;
+                Vector3 scale = targetTransform.localScale;
+                if (GetPoint(ref position, ref rotation, ref scale, segmentIndex, segmentProcess, loop))
+                {
+                    targetTransform.position = position;
+                    targetTransform.rotation = rotation;
+                    targetTransform.localScale = scale;
+                }
             }
-            targetTransform.rotation = Quaternion.Lerp(activeSegment.startPoint.rotation, activeSegment.endPoint.rotation, segmentProcess);
-            targetTransform.localScale = Vector3.Lerp(activeSegment.startPoint.localScale, activeSegment.endPoint.localScale, segmentProcess);
         }
-        private void OnLinearUpdate()
+        public bool GetPoint(ref Vector3 position, ref Quaternion rotation, ref Vector3 scale, int section, float progress, bool loop)
         {
-            targetTransform.position = Vector3.Lerp(activeSegment.startPoint.position, activeSegment.endPoint.position, segmentProcess);
+            if (section < 0)
+            {
+                Debug.LogException(new ArgumentOutOfRangeException("section"));
+                return false;
+            }
+            if (section >= segments.Count && !loop)
+            {
+                EZTransformAnimationSegment segment = segments[segments.Count - 1];
+                if (segment.endPoint != null)
+                {
+                    EZTransformPathPoint pathPoint = segment.endPoint;
+                    position = pathPoint.position;
+                    rotation = pathPoint.transform.rotation;
+                    scale = pathPoint.transform.localScale;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                EZTransformAnimationSegment segment = segments[section % segments.Count];
+                if (segment.startPoint != null && segment.endPoint != null)
+                {
+                    EZTransformPathPoint startPoint = segment.startPoint;
+                    EZTransformPathPoint endPoint = segment.endPoint;
+                    if (pathMode == PathMode.Bezier)
+                    {
+                        position = CalcBezierPoint(startPoint, endPoint, progress);
+                    }
+                    else
+                    {
+                        position = Vector3.Lerp(startPoint.position, endPoint.position, progress);
+                    }
+                    rotation = Quaternion.Lerp(startPoint.transform.rotation, endPoint.transform.rotation, progress);
+                    scale = Vector3.Lerp(startPoint.transform.localScale, endPoint.transform.localScale, progress);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
-        private void OnBezierUpdate()
+        public static Vector3 CalcBezierPoint(EZTransformPathPoint p1, EZTransformPathPoint p2, float progress)
         {
-            float t1 = segmentProcess;
-            float t2 = 1 - segmentProcess;
-            Vector3 p1 = activeSegment.startPoint.position;
-            Vector3 p2 = p1 + activeSegment.startTangent;
-            Vector3 p3 = activeSegment.endPoint.position + activeSegment.endTangent;
-            Vector3 p4 = activeSegment.endPoint.position;
-            targetTransform.position = p1 * t2 * t2 * t2
-                + 3 * p2 * t2 * t2 * t1
-                + 3 * p3 * t2 * t1 * t1
+            return CalcBezierPoint(p1.position, p1.startTangentPosition, p2.endTangentPosition, p2.position, progress);
+        }
+        public static Vector3 CalcBezierPoint(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, float progress)
+        {
+            float t1 = progress;
+            float t2 = 1 - progress;
+            return p1 * t2 * t2 * t2
+                + p2 * t2 * t2 * t1 * 3
+                + p3 * t2 * t1 * t1 * 3
                 + p4 * t1 * t1 * t1;
         }
 
 #if UNITY_EDITOR
-        private void DrawGizmos()
-        {
-            switch (pathMode)
-            {
-                case PathMode.Linear:
-                    DrawGizmos(LinearDrawer);
-                    break;
-                case PathMode.Bezier:
-                    DrawGizmos(BezierDrawer);
-                    break;
-            }
-        }
-        private void DrawGizmos(Action<EZTransformAnimationSegment> drawer)
-        {
-            for (int i = 0; i < segments.Count; i++)
-            {
-                EZTransformAnimationSegment seg = segments[i];
-                if (seg.startPoint != null && seg.endPoint != null)
-                {
-                    drawer(seg);
-                }
-            }
-        }
-        private void LinearDrawer(EZTransformAnimationSegment segment)
-        {
-            UnityEditor.Handles.DrawLine(segment.startPoint.position, segment.endPoint.position);
-        }
-        private void BezierDrawer(EZTransformAnimationSegment segment)
-        {
-            Vector3 startPoint = segment.startPoint.position;
-            Vector3 endPoint = segment.endPoint.position;
-            Vector3 startTangent = startPoint + segment.startTangent;
-            Vector3 endTangent = endPoint + segment.endTangent;
-            UnityEditor.Handles.DrawBezier(startPoint, endPoint, startTangent, endTangent, Gizmos.color, null, 1f);
-        }
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.grey;
@@ -111,15 +122,37 @@ namespace EZUnity.Animation
             Gizmos.color = Color.white;
             DrawGizmos();
         }
-#endif
-
-        private void Reset()
+        private void DrawGizmos()
         {
-            m_TargetTransform = transform;
-            m_Segments = new List<EZTransformAnimationSegment>()
+            switch (pathMode)
             {
-                new EZTransformAnimationSegment(),
-            };
+                case PathMode.Linear:
+                    DrawGizmos(DrawLinearGizmos);
+                    break;
+                case PathMode.Bezier:
+                    DrawGizmos(DrawBezierGizmos);
+                    break;
+            }
         }
+        private void DrawGizmos(Action<EZTransformPathPoint, EZTransformPathPoint> drawer)
+        {
+            for (int i = 0; i < segments.Count; i++)
+            {
+                EZTransformAnimationSegment segment = segments[i];
+                if (segment.startPoint != null && segment.endPoint != null)
+                {
+                    drawer(segment.startPoint, segment.endPoint);
+                }
+            }
+        }
+        private void DrawLinearGizmos(EZTransformPathPoint p1, EZTransformPathPoint p2)
+        {
+            UnityEditor.Handles.DrawLine(p1.position, p2.position);
+        }
+        private void DrawBezierGizmos(EZTransformPathPoint p1, EZTransformPathPoint p2)
+        {
+            UnityEditor.Handles.DrawBezier(p1.position, p2.position, p1.startTangentPosition, p2.endTangentPosition, Gizmos.color, null, 1f);
+        }
+#endif
     }
 }

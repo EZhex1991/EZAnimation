@@ -12,11 +12,14 @@ namespace EZUnity.Animation
     public class EZTransformAnimationEditor : EZAnimationEditor
     {
         protected override string animationTargetPropertyName { get { return "m_TargetTransform"; } }
+
+        protected EZTransformAnimation transformAnimation;
         protected SerializedProperty m_PathMode;
 
         protected override void OnEnable()
         {
             base.OnEnable();
+            transformAnimation = target as EZTransformAnimation;
             m_PathMode = serializedObject.FindProperty("m_PathMode");
         }
         public override void DrawOtherProperties()
@@ -50,36 +53,18 @@ namespace EZUnity.Animation
 
         private void OnSceneGUI()
         {
-            EZTransformAnimation animation = target as EZTransformAnimation;
-            Handles.color = Color.gray;
-            if (animation.pathMode == EZTransformAnimation.PathMode.Bezier)
+            if (transformAnimation.pathMode == EZTransformAnimation.PathMode.Bezier)
             {
-                for (int i = 0; i < animation.segments.Count; i++)
+                for (int i = 0; i < transformAnimation.segments.Count; i++)
                 {
-                    EZTransformAnimationSegment seg = animation.segments[i];
-                    if (seg.startPoint != null && seg.endPoint != null)
+                    EZTransformAnimationSegment segment = transformAnimation.segments[i];
+                    if (segment.startPoint != null)
                     {
-                        Handles.color = Color.green;
-                        Handles.matrix = seg.startPoint.localToWorldMatrix;
-                        Vector3 startTangentPosition = Handles.FreeMoveHandle(seg.startTangent, Quaternion.identity, HandleUtility.GetHandleSize(seg.startTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
-                        if (startTangentPosition != seg.startTangent)
-                        {
-                            Undo.RegisterCompleteObjectUndo(target, "Path Modify");
-                            seg.startTangent = startTangentPosition;
-                            EditorUtility.SetDirty(target);
-                        }
-                        Handles.DrawDottedLine(Vector3.zero, seg.startTangent, 1);
-
-                        Handles.color = Color.red;
-                        Handles.matrix = seg.endPoint.localToWorldMatrix;
-                        Vector3 endTangentPosition = Handles.FreeMoveHandle(seg.endTangent, Quaternion.identity, HandleUtility.GetHandleSize(seg.endTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);
-                        if (endTangentPosition != seg.endTangent)
-                        {
-                            Undo.RegisterCompleteObjectUndo(target, "Path Modify");
-                            seg.endTangent = endTangentPosition;
-                            EditorUtility.SetDirty(target);
-                        }
-                        Handles.DrawDottedLine(Vector3.zero, seg.endTangent, 1);
+                        EZTransformPathPointEditor.DrawTangentHandles(segment.startPoint);
+                    }
+                    if (segment.endPoint != null)
+                    {
+                        EZTransformPathPointEditor.DrawTangentHandles(transformAnimation.segments[i].endPoint);
                     }
                 }
             }
