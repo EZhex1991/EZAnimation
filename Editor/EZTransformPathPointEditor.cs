@@ -27,7 +27,9 @@ namespace EZUnity.Animation
 
         public override void OnInspectorGUI()
         {
-            EZEditorGUIUtility.MonoBehaviourTitle(pathPoint);
+            GUI.enabled = false;
+            EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour(pathPoint), typeof(MonoScript), false);
+            GUI.enabled = true;
             serializedObject.Update();
             EditorGUILayout.PropertyField(m_BrokenTangent);
             EditorGUILayout.PropertyField(m_StartTangent);
