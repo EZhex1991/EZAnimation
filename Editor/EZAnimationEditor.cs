@@ -66,14 +66,15 @@ namespace EZUnity.Animation
             SerializedProperty curve = segment.FindPropertyRelative("m_Curve");
             rect.y += 1;
             rect.height = singleLineHeight;
-            float width = rect.width / 4;
-            rect.width = width - horizontalSpace;
+            float labelWidth = 75f;
+            float width = (rect.width - labelWidth) / 3;
+            rect.width = labelWidth;
             EditorGUI.LabelField(rect, "Duration");
-            rect.x += width; rect.width = width - horizontalSpace;
+            rect.x += labelWidth; rect.width = width - horizontalSpace;
             EditorGUI.PropertyField(rect, duration, GUIContent.none);
             rect.x += width; rect.width = width * 2 - horizontalSpace;
             Color curveColor = animation.segmentIndex == index ? Color.red : Color.green;
-            Rect curveRect = new Rect(0, 0, duration.floatValue, 1);
+            Rect curveRect = new Rect(0, 0, 1, 1);
             curve.animationCurveValue = EditorGUI.CurveField(rect, curve.animationCurveValue, curveColor, curveRect);
         }
         protected virtual Rect OnSegmentProperty(Rect rect, SerializedProperty segment)

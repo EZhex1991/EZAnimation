@@ -88,7 +88,7 @@ namespace EZUnity.Animation
         {
             time += deltaTime;
             segmentTime += deltaTime;
-            segmentProcess = activeSegment.duration <= 0 ? 1 : activeSegment.curve.Evaluate(segmentTime);
+            segmentProcess = activeSegment.duration <= 0 ? 1 : activeSegment.curve.Evaluate(segmentTime / activeSegment.duration);
             OnSegmentUpdate();
             if (segmentTime > activeSegment.duration)
             {
