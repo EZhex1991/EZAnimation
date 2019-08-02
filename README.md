@@ -1,5 +1,8 @@
 # EZAnimation
 
+[View it on GitHub](https://github.com/EZhex1991/EZAnimation)  
+[查看中文介绍](README_CN.md)  
+
 A stateless-animation-component collection
 
 The design aimed to create simple and stateless animations.  

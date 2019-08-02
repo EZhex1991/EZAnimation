@@ -1,5 +1,8 @@
 # EZAnimation
 
+[View it on GitHub](https://github.com/EZhex1991/EZAnimation)  
+[English Version](README.md)  
+
 一些无状态动画的组件
 
 设计初衷是用它来实现一些简单的、无状态的动画。  
