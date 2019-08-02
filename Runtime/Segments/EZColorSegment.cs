@@ -9,10 +9,15 @@ using UnityEngine;
 namespace EZhex1991.EZAnimation
 {
     [Serializable]
-    public class EZColorAnimationSegment : EZAnimationSegment
+    public class EZColorSegment : EZAnimationSegment
     {
         [SerializeField]
         private Gradient m_Gradient = EZAnimationUtility.GradientFadeOut();
         public Gradient gradient { get { return m_Gradient; } set { m_Gradient = value; } }
+
+        public Color Evaluate(float time)
+        {
+            return gradient.Evaluate(time);
+        }
     }
 }

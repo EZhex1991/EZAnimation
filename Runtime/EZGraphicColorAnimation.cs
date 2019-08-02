@@ -3,40 +3,15 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace EZhex1991.EZAnimation
 {
-    public class EZGraphicColorAnimation : EZAnimation<EZColorAnimationSegment>
+    public class EZGraphicColorAnimation : EZAnimation<Graphic, EZColorSegment>
     {
-        [SerializeField]
-        private Graphic m_TargetGraphic;
-        public Graphic targetGraphic
-        {
-            get
-            {
-                if (m_TargetGraphic == null)
-                {
-                    m_TargetGraphic = GetComponent<Graphic>();
-                }
-                return m_TargetGraphic;
-            }
-        }
-
         protected override void OnSegmentUpdate()
         {
-            targetGraphic.color = activeSegment.gradient.Evaluate(segmentProcess);
-        }
-
-        private void Reset()
-        {
-            m_TargetGraphic = GetComponent<Graphic>();
-            m_Segments = new List<EZColorAnimationSegment>()
-            {
-                new EZColorAnimationSegment(),
-            };
+            target.color = activeSegment.Evaluate(segmentProcess);
         }
     }
 }

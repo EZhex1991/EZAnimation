@@ -11,8 +11,6 @@ namespace EZhex1991.EZAnimation
     [CustomEditor(typeof(EZRectTransformAnimation), true), CanEditMultipleObjects]
     public class EZRectTransformAnimationEditor : EZAnimationEditor
     {
-        protected override string animationTargetPropertyName { get { return "m_RectTransform"; } }
-
         protected override void DrawSegmentListHeader(Rect rect)
         {
             rect.x += headerIndent; rect.width -= headerIndent;

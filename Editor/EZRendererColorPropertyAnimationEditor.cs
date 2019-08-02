@@ -8,9 +8,20 @@ using UnityEngine;
 
 namespace EZhex1991.EZAnimation
 {
-    [CustomEditor(typeof(EZGraphicColorAnimation), true), CanEditMultipleObjects]
-    public class EZGraphicColorAnimationEditor : EZAnimationEditor
+    [CustomEditor(typeof(EZRendererColorPropertyAnimation), true), CanEditMultipleObjects]
+    public class EZRendererColorPropertyAnimationEditor : EZAnimationEditor
     {
+        protected SerializedProperty m_PropertyName;
+
+        protected override void GetOtherProperties()
+        {
+            m_PropertyName = serializedObject.FindProperty("m_PropertyName");
+        }
+        protected override void DrawPropertiesAboveSegments()
+        {
+            EditorGUILayout.PropertyField(m_PropertyName);
+        }
+
         protected override float GetSegmentListElementHeight(int index)
         {
             return base.GetSegmentListElementHeight(index) * 2;

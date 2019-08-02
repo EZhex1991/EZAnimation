@@ -11,18 +11,15 @@ namespace EZhex1991.EZAnimation
     [CustomEditor(typeof(EZTransformAnimation), true), CanEditMultipleObjects]
     public class EZTransformAnimationEditor : EZAnimationEditor
     {
-        protected override string animationTargetPropertyName { get { return "m_TargetTransform"; } }
-
         protected EZTransformAnimation transformAnimation;
         protected SerializedProperty m_PathMode;
 
-        protected override void OnEnable()
+        protected override void GetOtherProperties()
         {
-            base.OnEnable();
             transformAnimation = target as EZTransformAnimation;
             m_PathMode = serializedObject.FindProperty("m_PathMode");
         }
-        public override void DrawOtherProperties()
+        protected override void DrawPropertiesAboveSegments()
         {
             EditorGUILayout.PropertyField(m_PathMode);
         }
@@ -57,7 +54,7 @@ namespace EZhex1991.EZAnimation
             {
                 for (int i = 0; i < transformAnimation.segments.Count; i++)
                 {
-                    EZTransformAnimationSegment segment = transformAnimation.segments[i];
+                    EZTransformSegment segment = transformAnimation.segments[i];
                     if (segment.startPoint != null)
                     {
                         EZTransformPathPointEditor.DrawTangentHandles(segment.startPoint);

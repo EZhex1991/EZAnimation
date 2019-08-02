@@ -9,7 +9,7 @@ using UnityEngine;
 namespace EZhex1991.EZAnimation
 {
     [Serializable]
-    public class EZTransformAnimationSegment : EZAnimationSegment
+    public class EZTransformSegment : EZAnimationSegment
     {
         [SerializeField]
         private EZTransformPathPoint m_StartPoint;

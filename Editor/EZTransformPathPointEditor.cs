@@ -44,7 +44,7 @@ namespace EZhex1991.EZAnimation
 
         public static void DrawTangentHandles(EZTransformPathPoint pathPoint)
         {
-            Handles.matrix = pathPoint.transform.localToWorldMatrix;
+            Handles.matrix = Matrix4x4.TRS(pathPoint.transform.position, pathPoint.transform.rotation, Vector3.one);
 
             Handles.color = Color.green;
             Vector3 startTangent = Handles.FreeMoveHandle(pathPoint.startTangent, Quaternion.identity, HandleUtility.GetHandleSize(pathPoint.startTangent) * 0.15f, Vector3.zero, Handles.SphereHandleCap);

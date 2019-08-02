@@ -11,9 +11,8 @@ namespace EZhex1991.EZAnimation
 {
     public abstract class EZAnimationEditor : Editor
     {
-        protected IEZAnimation animation;
+        protected EZAnimation animation;
 
-        protected abstract string animationTargetPropertyName { get; }
         protected SerializedProperty m_Target;
         protected SerializedProperty m_Loop;
         protected SerializedProperty m_PlayOnAwake;
@@ -29,11 +28,11 @@ namespace EZhex1991.EZAnimation
         protected float singleLineHeight = EditorGUIUtility.singleLineHeight;
         protected float verticalSpace = EditorGUIUtility.standardVerticalSpacing;
 
-        protected virtual void OnEnable()
+        protected void OnEnable()
         {
-            animation = target as IEZAnimation;
+            animation = target as EZAnimation;
 
-            m_Target = serializedObject.FindProperty(animationTargetPropertyName);
+            m_Target = serializedObject.FindProperty("m_Target");
             m_Loop = serializedObject.FindProperty("m_Loop");
             m_PlayOnAwake = serializedObject.FindProperty("m_PlayOnAwake");
             m_RestartOnEnable = serializedObject.FindProperty("m_RestartOnEnable");
@@ -47,6 +46,11 @@ namespace EZhex1991.EZAnimation
                 elementHeightCallback = GetSegmentListElementHeight,
                 drawElementCallback = DrawSegmentListElement,
             };
+            GetOtherProperties();
+        }
+        protected virtual void GetOtherProperties()
+        {
+
         }
 
         protected virtual void DrawSegmentListHeader(Rect rect)
@@ -60,22 +64,23 @@ namespace EZhex1991.EZAnimation
         protected virtual void DrawSegmentListElement(Rect rect, int index, bool isActive, bool isFocused)
         {
             SerializedProperty segment = segments.serializedProperty.GetArrayElementAtIndex(index);
-            rect = OnSegmentProperty(rect, segment);
+            OnSegmentProperty(rect, segment);
 
+            float originalLabelWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = 75f;
             SerializedProperty duration = segment.FindPropertyRelative("m_Duration");
             SerializedProperty curve = segment.FindPropertyRelative("m_Curve");
-            rect.y += 1;
+            rect.y += rect.height - singleLineHeight - verticalSpace;
             rect.height = singleLineHeight;
-            float labelWidth = 75f;
-            float width = (rect.width - labelWidth) / 3;
-            rect.width = labelWidth;
-            EditorGUI.LabelField(rect, "Duration");
-            rect.x += labelWidth; rect.width = width - horizontalSpace;
-            EditorGUI.PropertyField(rect, duration, GUIContent.none);
-            rect.x += width; rect.width = width * 2 - horizontalSpace;
+            float margin = 5f;
+            float width = (rect.width - margin) / 2;
+            rect.width = width;
+            EditorGUI.PropertyField(rect, duration);
+            rect.x += width + margin;
             Color curveColor = animation.segmentIndex == index ? Color.red : Color.green;
             Rect curveRect = new Rect(0, 0, 1, 1);
             curve.animationCurveValue = EditorGUI.CurveField(rect, curve.animationCurveValue, curveColor, curveRect);
+            EditorGUIUtility.labelWidth = originalLabelWidth;
         }
         protected virtual Rect OnSegmentProperty(Rect rect, SerializedProperty segment)
         {
@@ -90,18 +95,22 @@ namespace EZhex1991.EZAnimation
             GUI.enabled = true;
 
             DrawController();
+
             EditorGUILayout.PropertyField(m_Target);
+            DrawPropertiesUnderTarget();
+
             EditorGUILayout.PropertyField(m_Loop);
             EditorGUILayout.PropertyField(m_PlayOnAwake);
             EditorGUILayout.PropertyField(m_RestartOnEnable);
             EditorGUILayout.PropertyField(m_UpdateMode);
             EditorGUILayout.PropertyField(m_Time);
-            DrawOtherProperties();
+
+            DrawPropertiesAboveSegments();
             segments.DoLayoutList();
 
             serializedObject.ApplyModifiedProperties();
         }
-        public virtual void DrawController()
+        protected virtual void DrawController()
         {
             GUI.enabled = Application.isPlaying;
             {
@@ -126,7 +135,11 @@ namespace EZhex1991.EZAnimation
             EditorGUILayout.PropertyField(m_Status);
             GUI.enabled = true;
         }
-        public virtual void DrawOtherProperties()
+        protected virtual void DrawPropertiesUnderTarget()
+        {
+
+        }
+        protected virtual void DrawPropertiesAboveSegments()
         {
 
         }

@@ -11,7 +11,7 @@ namespace EZhex1991.EZAnimation
     {
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
-            IEZAnimation controller = playerData as IEZAnimation;
+            EZAnimation controller = playerData as EZAnimation;
             if (controller == null) return;
             controller.Process((float)playable.GetTime());
         }

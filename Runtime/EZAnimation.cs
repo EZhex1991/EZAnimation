@@ -15,27 +15,39 @@ namespace EZhex1991.EZAnimation
         Stopped = 3
     }
 
-    public interface IEZAnimation
-    {
-        Status status { get; }
-        int segmentIndex { get; }
-        float segmentTime { get; }
-        float segmentProcess { get; }
-
-        void StartSegment(int index);
-        void Process(float time);
-
-        void Play();
-        void Pause();
-        void Resume();
-        void Stop();
-    }
-
     public delegate void OnAnimationEndAction();
 
-    public abstract class EZAnimation<T> : MonoBehaviour, IEZAnimation
-        where T : EZAnimationSegment
+    public abstract class EZAnimation : MonoBehaviour
     {
+        [SerializeField]
+        protected Status m_Status = Status.Stopped;
+        public Status status { get { return m_Status; } protected set { m_Status = value; } }
+
+        [SerializeField]
+        protected float m_Time;
+        public float time { get { return m_Time; } set { m_Time = value; } }
+
+        public int segmentIndex { get; protected set; }
+        public float segmentTime { get; protected set; }
+        public float segmentProcess { get; protected set; }
+
+        public abstract void StartSegment(int index);
+        public abstract void Process(float time);
+
+        public abstract void Play();
+        public abstract void Pause();
+        public abstract void Resume();
+        public abstract void Stop();
+    }
+
+    public abstract class EZAnimation<TargetType, SegmentType> : EZAnimation
+        where TargetType : Component
+        where SegmentType : EZAnimationSegment, new()
+    {
+        [SerializeField]
+        protected TargetType m_Target;
+        public TargetType target { get { return m_Target; } set { m_Target = value; } }
+
         [SerializeField]
         protected bool m_Loop = true;
         public bool loop { get { return m_Loop; } set { m_Loop = value; } }
@@ -53,24 +65,14 @@ namespace EZhex1991.EZAnimation
         public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
 
         [SerializeField]
-        protected Status m_Status = Status.Stopped;
-        public Status status { get { return m_Status; } protected set { m_Status = value; } }
+        protected List<SegmentType> m_Segments = new List<SegmentType>();
+        public List<SegmentType> segments { get { return m_Segments; } set { m_Segments = value; } }
 
-        [SerializeField]
-        protected List<T> m_Segments = new List<T>();
-        public List<T> segments { get { return m_Segments; } set { m_Segments = value; } }
-        [SerializeField]
-        protected float m_Time;
-        public float time { get { return m_Time; } set { m_Time = value; } }
-
-        public int segmentIndex { get; private set; }
-        public float segmentTime { get; private set; }
-        public T activeSegment { get { return segments[segmentIndex]; } }
-        public float segmentProcess { get; private set; }
+        public SegmentType activeSegment { get { return segments[segmentIndex]; } }
 
         public event OnAnimationEndAction onAnimationEndEvent;
 
-        public virtual void StartSegment(int index = 0)
+        public override void StartSegment(int index = 0)
         {
             if (index >= segments.Count) return;
             time = 0;
@@ -117,21 +119,21 @@ namespace EZhex1991.EZAnimation
             }
         }
 
-        public void Play()
+        public override void Play()
         {
             StartSegment(0);
         }
-        public void Pause()
+        public override void Pause()
         {
             if (status == Status.Running)
                 status = Status.Paused;
         }
-        public void Resume()
+        public override void Resume()
         {
             if (status == Status.Paused)
                 status = Status.Running;
         }
-        public void Stop()
+        public override void Stop()
         {
             time = 0;
             status = Status.Stopped;
@@ -140,7 +142,7 @@ namespace EZhex1991.EZAnimation
             segmentProcess = 0;
         }
 
-        public void Process(float _time)
+        public override void Process(float _time)
         {
             time = _time;
             if (segments.Count == 0) return;
@@ -221,6 +223,14 @@ namespace EZhex1991.EZAnimation
             if (updateMode != AnimatorUpdateMode.AnimatePhysics) return;
             if (!IsRunning()) return;
             ProcessSegment(Time.fixedDeltaTime);
+        }
+        protected virtual void Reset()
+        {
+            m_Target = GetComponent<TargetType>();
+            m_Segments = new List<SegmentType>()
+            {
+                new SegmentType(),
+            };
         }
     }
 }

@@ -23,8 +23,8 @@ namespace EZhex1991.EZAnimation
         public Vector3 endTangent { get { return m_EndTangent; } set { m_EndTangent = value; } }
 
         public Vector3 position { get { return transform.position; } }
-        public Vector3 startTangentPosition { get { return transform.TransformPoint(startTangent); } }
-        public Vector3 endTangentPosition { get { return transform.TransformPoint(endTangent); } }
+        public Vector3 startTangentPosition { get { return transform.position + transform.TransformDirection(startTangent); } }
+        public Vector3 endTangentPosition { get { return transform.position + transform.TransformDirection(endTangent); } }
 
         private void OnValidate()
         {

@@ -1,23 +1,63 @@
-# EZAnimation，动画组件
+# EZAnimation
 
-Unity自带的Animator功能相当强大，所以在某些简单的动画制作上反倒显得过于复杂——特别是对于不需要状态机的动画。  
-对于这些简单的动画控制，一般来说可以在代码中用协程或者DOTween实现，但这个方式不太友好，运行时调整起来比较闹心。  
+A stateless-animation-component collection
 
-EZAnimation使用AnimationCurve去做一些插值计算。
+The design aimed to create simple and stateless animations.  
+Most of the effects could be easily implemented by Update, Coroutine, DOTween, etc, but hard to be configured or adjusted in runtime.
 
-为了方便设计和编辑，这里用了一个Segment的概念对动画进行分段，一个Segment就是一段动画，包含自定义数据、持续时间Duration、曲线Curve。  
-该组件的编辑器用到了ReorderableList，你可以很方便的在Inspector中进行重新排序或者插入删除操作。
+## EZAnimation Components
 
-例：
+`EZAnimation` is the base class of all other animation components, the time(process) of the animation progress is updated here, you only need to define your own animation segments and apply changes to your target by override `OnSegmentUpdate` function.
 
-- EZTransformAnimation: 用来对Transform进行移动旋转缩放的动画，每个EZTransformAnimationSegment都包含两个路径点，在PathMode选项中可以选择使用折线或贝塞尔曲线
+``` C#
+[Serializable]
+public class EZColorSegment : EZAnimationSegment
+{
+    [SerializeField]
+    private Gradient m_Gradient = EZAnimationUtility.GradientFadeOut();
+    public Gradient gradient { get { return m_Gradient; } set { m_Gradient = value; } }
+
+    public Color Evaluate(float time)
+    {
+        return gradient.Evaluate(time);
+    }
+}
+public class EZGraphicColorAnimation : EZAnimation<Graphic, EZColorSegment>
+{
+    protected override void OnSegmentUpdate()
+    {
+        target.color = activeSegment.Evaluate(segmentProcess);
+    }
+}
+```
+
+## Segment
+
+The animation data is a list of `Segment`, or, you can say a segment is a piece(clip) of the whole animation.  
+The base segment class `EZAnimationSegment` contains duration and time curve, you can append it as your need.  
+I created CustomEditor for each of my `EZAnimation` components, so that you can easily add, remove, and reorder the segment list.  
+
+## Playables
+
+The playables is an additional way to control the animation, you will need it when you work with the Timeline feature, and, you can simply remove the "EZAnimation/Runtime/Playables" folder if you don't need it.
+
+---
+
+All the source code is available, and I tried my best to make the name of the variables readable, so I believe this is enough for a README.
+If you have further questions, just create an issue.
+
+- EZTransformAnimation
 
 ![EZTransformAnimation](.SamplePicture/EZTransformAnimation.png)
 
-- EZRectTransformAnimation: 与EZTransformAnimation类似，不再赘述。
+- EZRectTransformAnimation
 
 ![EZRectTransformAnimation](.SamplePicture/EZRectTransformAnimation.png)
 
-- EZGraphicColorAnimation: 用来对某个有Graphic（及其子类）组件的颜色进行Gradient动画，每个EZColorAnimationSegment都包含一个渐变颜色
+- EZGraphicColorAnimation
 
 ![EZGraphicColorAnimation](.SamplePicture/EZGraphicColorAnimation.png)
+
+- EZRendererColorPropertyAnimation
+
+![EZRendererColorPropertyAnimation](.SamplePicture/EZRendererColorPropertyAnimation.png)

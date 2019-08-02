@@ -3,45 +3,21 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace EZhex1991.EZAnimation
 {
-    public class EZRectTransformAnimation : EZAnimation<EZRectTransformAnimationSegment>
+    public class EZRectTransformAnimation : EZAnimation<RectTransform, EZRectTransformSegment>
     {
-        [SerializeField]
-        private RectTransform m_RectTransform;
-        public RectTransform rectTransform
-        {
-            get
-            {
-                if (m_RectTransform == null)
-                {
-                    m_RectTransform = GetComponent<RectTransform>();
-                }
-                return m_RectTransform;
-            }
-        }
-
         protected override void OnSegmentUpdate()
         {
-            rectTransform.anchoredPosition = Vector2.Lerp(activeSegment.startRect.anchoredPosition, activeSegment.endRect.anchoredPosition, segmentProcess);
-            rectTransform.anchorMin = Vector2.Lerp(activeSegment.startRect.anchorMin, activeSegment.endRect.anchorMin, segmentProcess);
-            rectTransform.anchorMax = Vector2.Lerp(activeSegment.startRect.anchorMax, activeSegment.endRect.anchorMax, segmentProcess);
-            rectTransform.pivot = Vector2.Lerp(activeSegment.startRect.pivot, activeSegment.endRect.pivot, segmentProcess);
-            rectTransform.sizeDelta = Vector2.Lerp(activeSegment.startRect.sizeDelta, activeSegment.endRect.sizeDelta, segmentProcess);
-            rectTransform.rotation = Quaternion.Lerp(activeSegment.startRect.rotation, activeSegment.endRect.rotation, segmentProcess);
-            rectTransform.localScale = Vector3.Lerp(activeSegment.startRect.localScale, activeSegment.endRect.localScale, segmentProcess);
-        }
-
-        private void Reset()
-        {
-            m_RectTransform = GetComponent<RectTransform>();
-            m_Segments = new List<EZRectTransformAnimationSegment>()
-            {
-                new EZRectTransformAnimationSegment(),
-            };
+            target.anchoredPosition = Vector2.Lerp(activeSegment.startRect.anchoredPosition, activeSegment.endRect.anchoredPosition, segmentProcess);
+            target.anchorMin = Vector2.Lerp(activeSegment.startRect.anchorMin, activeSegment.endRect.anchorMin, segmentProcess);
+            target.anchorMax = Vector2.Lerp(activeSegment.startRect.anchorMax, activeSegment.endRect.anchorMax, segmentProcess);
+            target.pivot = Vector2.Lerp(activeSegment.startRect.pivot, activeSegment.endRect.pivot, segmentProcess);
+            target.sizeDelta = Vector2.Lerp(activeSegment.startRect.sizeDelta, activeSegment.endRect.sizeDelta, segmentProcess);
+            target.rotation = Quaternion.Lerp(activeSegment.startRect.rotation, activeSegment.endRect.rotation, segmentProcess);
+            target.localScale = Vector3.Lerp(activeSegment.startRect.localScale, activeSegment.endRect.localScale, segmentProcess);
         }
     }
 }

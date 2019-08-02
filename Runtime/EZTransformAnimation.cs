@@ -9,24 +9,12 @@ using UnityEngine;
 namespace EZhex1991.EZAnimation
 {
     [DisallowMultipleComponent]
-    public class EZTransformAnimation : EZAnimation<EZTransformAnimationSegment>
+    public class EZTransformAnimation : EZAnimation<Transform, EZTransformSegment>
     {
         public enum PathMode
         {
             Linear,
             Bezier,
-        }
-
-        [SerializeField]
-        private Transform m_TargetTransform;
-        public Transform targetTransform
-        {
-            get
-            {
-                if (m_TargetTransform == null)
-                    m_TargetTransform = transform;
-                return m_TargetTransform;
-            }
         }
 
         [Header("Path")]
@@ -36,16 +24,16 @@ namespace EZhex1991.EZAnimation
 
         protected override void OnSegmentUpdate()
         {
-            if (targetTransform != null)
+            if (target != null)
             {
-                Vector3 position = targetTransform.position;
-                Quaternion rotation = targetTransform.rotation;
-                Vector3 scale = targetTransform.localScale;
+                Vector3 position = target.position;
+                Quaternion rotation = target.rotation;
+                Vector3 scale = target.localScale;
                 if (GetPoint(ref position, ref rotation, ref scale, segmentIndex, segmentProcess, loop))
                 {
-                    targetTransform.position = position;
-                    targetTransform.rotation = rotation;
-                    targetTransform.localScale = scale;
+                    target.position = position;
+                    target.rotation = rotation;
+                    target.localScale = scale;
                 }
             }
         }
@@ -58,7 +46,7 @@ namespace EZhex1991.EZAnimation
             }
             if (section >= segments.Count && !loop)
             {
-                EZTransformAnimationSegment segment = segments[segments.Count - 1];
+                EZTransformSegment segment = segments[segments.Count - 1];
                 if (segment.endPoint != null)
                 {
                     EZTransformPathPoint pathPoint = segment.endPoint;
@@ -74,7 +62,7 @@ namespace EZhex1991.EZAnimation
             }
             else
             {
-                EZTransformAnimationSegment segment = segments[section % segments.Count];
+                EZTransformSegment segment = segments[section % segments.Count];
                 if (segment.startPoint != null && segment.endPoint != null)
                 {
                     EZTransformPathPoint startPoint = segment.startPoint;
@@ -138,7 +126,7 @@ namespace EZhex1991.EZAnimation
         {
             for (int i = 0; i < segments.Count; i++)
             {
-                EZTransformAnimationSegment segment = segments[i];
+                EZTransformSegment segment = segments[i];
                 if (segment.startPoint != null && segment.endPoint != null)
                 {
                     drawer(segment.startPoint, segment.endPoint);

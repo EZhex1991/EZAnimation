@@ -5,21 +5,20 @@
  */
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using UnityEngine.UI;
 
 namespace EZhex1991.EZAnimation
 {
     [TrackClipType(typeof(EZAnimationClip))]
-    [TrackBindingType(typeof(EZGraphicColorAnimation))]
-    public class EZGraphicColorAnimationTrack : TrackAsset
+    [TrackBindingType(typeof(EZRectTransformAnimation))]
+    public class EZRectTransformTrack : TrackAsset
     {
         public override void GatherProperties(PlayableDirector director, IPropertyCollector driver)
         {
 #if UNITY_EDITOR
-            var controller = director.GetGenericBinding(this) as EZGraphicColorAnimation;
-            if (controller == null || controller.targetGraphic == null) return;
-            driver.AddFromName<EZGraphicColorAnimation>(controller.gameObject, "m_Time");
-            driver.AddFromName<Graphic>(controller.targetGraphic.gameObject, "m_Color");
+            var controller = director.GetGenericBinding(this) as EZRectTransformAnimation;
+            if (controller == null || controller.target == null) return;
+            driver.AddFromName<EZRectTransformAnimation>(controller.gameObject, "m_Time");
+            driver.AddFromComponent(controller.target.gameObject, controller.target);
 #endif
             base.GatherProperties(director, driver);
         }
