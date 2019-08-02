@@ -1,12 +1,15 @@
 # EZAnimation
 
+This package is totally **FREE** and open-source.  
+If you feel it helpful, you can buy it on [AssetStore](https://assetstore.unity.com/packages/slug/151631) to support me. Other than that, [Donations](https://github.com/EZhex1991/Receipts) are always welcome.
+
 [View it on GitHub](https://github.com/EZhex1991/EZAnimation)  
 [查看中文介绍](README_CN.md)  
 
-A stateless-animation-component collection
+A interpolation animation component collection
 
-The design aimed to create simple and stateless animations.  
-Most of the effects could be easily implemented by Update, Coroutine, DOTween, etc, but hard to be configured or adjusted in runtime.
+The design aimed to create simple, stateless, interpolation animations easily.  
+Most of the effects could be easily implemented by Update, Coroutine, DOTween, etc, but that's hard to be configured or adjusted in runtime.
 
 ## EZAnimation Components
 
