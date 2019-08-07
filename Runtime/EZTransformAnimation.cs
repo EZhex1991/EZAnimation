@@ -28,12 +28,12 @@ namespace EZhex1991.EZAnimation
             {
                 Vector3 position = target.position;
                 Quaternion rotation = target.rotation;
-                Vector3 scale = target.localScale;
+                Vector3 scale = target.lossyScale;
                 if (GetPoint(ref position, ref rotation, ref scale, segmentIndex, segmentProcess, loop))
                 {
                     target.position = position;
                     target.rotation = rotation;
-                    target.localScale = scale;
+                    SetLossyScale(target, scale);
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace EZhex1991.EZAnimation
                     EZTransformPathPoint pathPoint = segment.endPoint;
                     position = pathPoint.position;
                     rotation = pathPoint.transform.rotation;
-                    scale = pathPoint.transform.localScale;
+                    scale = pathPoint.transform.lossyScale;
                     return true;
                 }
                 else
@@ -76,7 +76,7 @@ namespace EZhex1991.EZAnimation
                         position = Vector3.Lerp(startPoint.position, endPoint.position, progress);
                     }
                     rotation = Quaternion.Lerp(startPoint.transform.rotation, endPoint.transform.rotation, progress);
-                    scale = Vector3.Lerp(startPoint.transform.localScale, endPoint.transform.localScale, progress);
+                    scale = Vector3.Lerp(startPoint.transform.lossyScale, endPoint.transform.lossyScale, progress);
                     return true;
                 }
                 else
@@ -97,6 +97,21 @@ namespace EZhex1991.EZAnimation
                 + p2 * t2 * t2 * t1 * 3
                 + p3 * t2 * t1 * t1 * 3
                 + p4 * t1 * t1 * t1;
+        }
+
+        public const float minScale = 1e-5f;
+        public static void SetLossyScale(Transform t, Vector3 scale)
+        {
+            if (t.parent == null)
+            {
+                t.localScale = scale;
+                return;
+            }
+            Vector3 parentScale = t.parent.lossyScale;
+            scale.x = parentScale.x < minScale ? 0 : (scale.x / parentScale.x);
+            scale.y = parentScale.y < minScale ? 0 : (scale.y / parentScale.y);
+            scale.z = parentScale.z < minScale ? 0 : (scale.z / parentScale.z);
+            t.localScale = scale;
         }
 
 #if UNITY_EDITOR
