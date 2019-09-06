@@ -49,7 +49,7 @@ The playables is an additional way to control the animation, you will need it wh
 
 ---
 
-All the source code is available, and I tried my best to make the name of the variables readable, so I believe this is enough for a README.
+All the source code is available, and I tried my best to make all the code easy to understand, so I believe this is enough for a README.
 If you have further questions, just create an issue.
 
 - EZTransformAnimation
