@@ -6,8 +6,6 @@ If you feel it helpful, you can buy it on [AssetStore](https://assetstore.unity.
 [View it on GitHub](https://github.com/EZhex1991/EZAnimation)  
 [查看中文介绍](README_CN.md)  
 
-A interpolation animation component collection
-
 The design aimed to create simple, stateless, interpolation animations easily.  
 Most of the effects could be easily implemented by Update, Coroutine, DOTween, etc, but that's hard to be configured or adjusted in runtime.
 
