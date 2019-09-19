@@ -19,13 +19,25 @@ namespace EZhex1991.EZAnimation
 
     public abstract class EZAnimation : MonoBehaviour
     {
-        [SerializeField]
-        protected Status m_Status = Status.Stopped;
-        public Status status { get { return m_Status; } protected set { m_Status = value; } }
+        public abstract Component targetComponent { get; }
+        public Status status { get; protected set; }
+        public float time { get; protected set; }
 
         [SerializeField]
-        protected float m_Time;
-        public float time { get { return m_Time; } set { m_Time = value; } }
+        protected bool m_Loop = true;
+        public bool loop { get { return m_Loop; } set { m_Loop = value; } }
+
+        [SerializeField]
+        protected bool m_PlayOnAwake = true;
+        public bool playOnAwake { get { return m_PlayOnAwake; } set { m_PlayOnAwake = value; } }
+
+        [SerializeField]
+        protected bool m_RestartOnEnable = false;
+        public bool restartOnEnable { get { return m_RestartOnEnable; } set { m_RestartOnEnable = value; } }
+
+        [SerializeField]
+        protected AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
+        public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
 
         public int segmentIndex { get; protected set; }
         public float segmentTime { get; protected set; }
@@ -47,22 +59,7 @@ namespace EZhex1991.EZAnimation
         [SerializeField]
         protected TargetType m_Target;
         public TargetType target { get { return m_Target; } set { m_Target = value; } }
-
-        [SerializeField]
-        protected bool m_Loop = true;
-        public bool loop { get { return m_Loop; } set { m_Loop = value; } }
-
-        [SerializeField]
-        protected bool m_PlayOnAwake = true;
-        public bool playOnAwake { get { return m_PlayOnAwake; } set { m_PlayOnAwake = value; } }
-
-        [SerializeField]
-        protected bool m_RestartOnEnable = false;
-        public bool restartOnEnable { get { return m_RestartOnEnable; } set { m_RestartOnEnable = value; } }
-
-        [SerializeField]
-        protected AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
-        public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
+        public override Component targetComponent { get { return m_Target; } }
 
         [SerializeField]
         protected List<SegmentType> m_Segments = new List<SegmentType>();
@@ -151,6 +148,7 @@ namespace EZhex1991.EZAnimation
             segmentIndex = _segmentIndex;
             segmentTime = _time;
             ProcessSegment(0);
+            status = Status.Paused;
         }
         private float Process(ref int segmentIndex, ref float segmentTime)
         {

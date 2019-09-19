@@ -206,7 +206,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: aa5f6267d07966749a3a0a0f7ed7900c, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -427,13 +427,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c39e5e987a05b44890657a8ac24ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Status: 3
-  m_Time: 0
-  m_Target: {fileID: 37458112}
   m_Loop: 1
   m_PlayOnAwake: 1
   m_RestartOnEnable: 0
   m_UpdateMode: 0
+  m_Target: {fileID: 37458112}
   m_Segments:
   - m_Duration: 2
     m_Curve:
@@ -502,13 +500,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a268bf269c8200f4ab6c84db73d42919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Status: 3
-  m_Time: 0
-  m_Target: {fileID: 1357364097}
   m_Loop: 1
   m_PlayOnAwake: 1
   m_RestartOnEnable: 0
   m_UpdateMode: 0
+  m_Target: {fileID: 1357364097}
   m_Segments:
   - m_Duration: 1
     m_Curve:
@@ -829,13 +825,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 810f427afb0b7be49a0c5686abf37d80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Status: 3
-  m_Time: 0
-  m_Target: {fileID: 1357364099}
   m_Loop: 1
   m_PlayOnAwake: 1
   m_RestartOnEnable: 0
   m_UpdateMode: 0
+  m_Target: {fileID: 1357364099}
   m_Segments:
   - m_Duration: 1.5
     m_Curve:
@@ -1167,13 +1161,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0608d88015b0f824aa2398f0158979e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Status: 3
-  m_Time: 0
-  m_Target: {fileID: 1712881440}
   m_Loop: 1
   m_PlayOnAwake: 1
   m_RestartOnEnable: 0
   m_UpdateMode: 0
+  m_Target: {fileID: 1712881440}
   m_Segments:
   - m_Duration: 1
     m_Curve:
@@ -1430,13 +1422,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f7204d2ad9c90543a7da25f9a4b583c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Status: 3
-  m_Time: 0
-  m_Target: {fileID: 1357364097}
   m_Loop: 1
   m_PlayOnAwake: 1
   m_RestartOnEnable: 0
   m_UpdateMode: 0
+  m_Target: {fileID: 1357364097}
   m_Segments:
   - m_Duration: 1
     m_Curve:

@@ -18,8 +18,6 @@ namespace EZhex1991.EZAnimation
         protected SerializedProperty m_PlayOnAwake;
         protected SerializedProperty m_RestartOnEnable;
         protected SerializedProperty m_UpdateMode;
-        protected SerializedProperty m_Status;
-        protected SerializedProperty m_Time;
         protected SerializedProperty m_Segments;
         protected ReorderableList segments;
 
@@ -37,8 +35,6 @@ namespace EZhex1991.EZAnimation
             m_PlayOnAwake = serializedObject.FindProperty("m_PlayOnAwake");
             m_RestartOnEnable = serializedObject.FindProperty("m_RestartOnEnable");
             m_UpdateMode = serializedObject.FindProperty("m_UpdateMode");
-            m_Status = serializedObject.FindProperty("m_Status");
-            m_Time = serializedObject.FindProperty("m_Time");
             m_Segments = serializedObject.FindProperty("m_Segments");
             segments = new ReorderableList(serializedObject, m_Segments, true, true, true, true)
             {
@@ -103,7 +99,8 @@ namespace EZhex1991.EZAnimation
             EditorGUILayout.PropertyField(m_PlayOnAwake);
             EditorGUILayout.PropertyField(m_RestartOnEnable);
             EditorGUILayout.PropertyField(m_UpdateMode);
-            EditorGUILayout.PropertyField(m_Time);
+
+            EditorGUILayout.FloatField("Time", animation.time);
 
             DrawPropertiesAboveSegments();
             segments.DoLayoutList();
@@ -132,7 +129,8 @@ namespace EZhex1991.EZAnimation
                 }
                 GUILayout.EndHorizontal();
             }
-            EditorGUILayout.PropertyField(m_Status);
+            GUI.enabled = false;
+            EditorGUILayout.EnumPopup("Status", animation.status);
             GUI.enabled = true;
         }
         protected virtual void DrawPropertiesUnderTarget()
@@ -142,6 +140,11 @@ namespace EZhex1991.EZAnimation
         protected virtual void DrawPropertiesAboveSegments()
         {
 
+        }
+
+        public override bool RequiresConstantRepaint()
+        {
+            return true;
         }
     }
 }

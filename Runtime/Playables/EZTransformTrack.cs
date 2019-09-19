@@ -3,24 +3,13 @@
  * Organization:    #ORGANIZATION#
  * Description:     
  */
-using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 namespace EZhex1991.EZAnimation
 {
     [TrackClipType(typeof(EZAnimationClip))]
     [TrackBindingType(typeof(EZTransformAnimation))]
-    public class EZTransformTrack : TrackAsset
+    public class EZTransformTrack : EZAnimationTrack
     {
-        public override void GatherProperties(PlayableDirector director, IPropertyCollector driver)
-        {
-#if UNITY_EDITOR
-            var controller = director.GetGenericBinding(this) as EZTransformAnimation;
-            if (controller == null || controller.target == null) return;
-            driver.AddFromName<EZTransformAnimation>(controller.gameObject, "m_Time");
-            driver.AddFromComponent(controller.target.gameObject, controller.target);
-#endif
-            base.GatherProperties(director, driver);
-        }
     }
 }
