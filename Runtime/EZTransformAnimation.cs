@@ -29,7 +29,7 @@ namespace EZhex1991.EZAnimation
                 Vector3 position = target.position;
                 Quaternion rotation = target.rotation;
                 Vector3 scale = target.lossyScale;
-                if (GetPoint(ref position, ref rotation, ref scale, segmentIndex, segmentProcess, loop))
+                if (GetPoint(ref position, ref rotation, ref scale, segmentIndex, segmentProcess, loopMode == LoopMode.LoopAnimation))
                 {
                     target.position = position;
                     target.rotation = rotation;

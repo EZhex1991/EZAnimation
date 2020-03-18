@@ -10,9 +10,18 @@ namespace EZhex1991.EZAnimation
 {
     public enum Status
     {
+        Idle = 0,
         Running = 1,
         Paused = 2,
         Stopped = 3
+    }
+
+    public enum LoopMode
+    {
+        Default = 0,
+        LoopAnimation = 1,
+        Discrete = 2,
+        LoopSegment = 3,
     }
 
     public delegate void OnAnimationEndAction();
@@ -20,12 +29,16 @@ namespace EZhex1991.EZAnimation
     public abstract class EZAnimation : MonoBehaviour
     {
         public abstract Component targetComponent { get; }
-        public Status status { get; protected set; }
-        public float time { get; protected set; }
+
+        private Status m_Status = Status.Idle;
+        public Status status { get { return m_Status; } protected set { m_Status = value; } }
+
+        private float m_Time = 0;
+        public float time { get { return m_Time; } protected set { m_Time = value; } }
 
         [SerializeField]
-        protected bool m_Loop = true;
-        public bool loop { get { return m_Loop; } set { m_Loop = value; } }
+        protected LoopMode m_LoopMode = LoopMode.Default;
+        public LoopMode loopMode { get { return m_LoopMode; } set { m_LoopMode = value; } }
 
         [SerializeField]
         protected bool m_PlayOnAwake = true;
@@ -39,7 +52,10 @@ namespace EZhex1991.EZAnimation
         protected AnimatorUpdateMode m_UpdateMode = AnimatorUpdateMode.Normal;
         public AnimatorUpdateMode updateMode { get { return m_UpdateMode; } set { m_UpdateMode = value; } }
 
-        public int segmentIndex { get; protected set; }
+        [SerializeField]
+        private int m_SegmentIndex;
+        public int segmentIndex { get { return m_SegmentIndex; } protected set { m_SegmentIndex = value; } }
+
         public float segmentTime { get; protected set; }
         public float segmentProcess { get; protected set; }
 
@@ -97,20 +113,49 @@ namespace EZhex1991.EZAnimation
         protected virtual void StopSegment()
         {
             OnSegmentStop();
-            segmentIndex++;
-            if (segmentIndex >= segments.Count)
+
+            if (loopMode == LoopMode.Default)
             {
-                if (onAnimationEndEvent != null) onAnimationEndEvent();
-                if (loop)
+                segmentIndex++;
+                if (segmentIndex >= segments.Count)
                 {
+                    if (onAnimationEndEvent != null) onAnimationEndEvent();
+                    Stop();
+                }
+                else
+                {
+                    StartSegment(segmentIndex);
+                }
+            }
+            else if (loopMode == LoopMode.LoopAnimation)
+            {
+                segmentIndex++;
+                if (segmentIndex >= segments.Count)
+                {
+                    if (onAnimationEndEvent != null) onAnimationEndEvent();
                     StartSegment(0);
                 }
                 else
                 {
-                    Stop();
+                    StartSegment(segmentIndex);
                 }
             }
-            else
+            else if (loopMode == LoopMode.Discrete)
+            {
+                segmentIndex++;
+                if (segmentIndex >= segments.Count)
+                {
+                    if (onAnimationEndEvent != null) onAnimationEndEvent();
+                    Stop();
+                }
+                else
+                {
+                    Pause();
+                    segmentTime = 0;
+                    segmentProcess = 0;
+                }
+            }
+            else if (loopMode == LoopMode.LoopSegment)
             {
                 StartSegment(segmentIndex);
             }
@@ -118,7 +163,7 @@ namespace EZhex1991.EZAnimation
 
         public override void Play()
         {
-            StartSegment(0);
+            StartSegment(segmentIndex);
         }
         public override void Pause()
         {
@@ -154,13 +199,14 @@ namespace EZhex1991.EZAnimation
         {
             if (segmentIndex >= segments.Count)
             {
-                if (loop)
+                if (loopMode == LoopMode.LoopAnimation)
                 {
-                    segmentIndex = 0;
+                    segmentIndex -= segments.Count;
                     return Process(ref segmentIndex, ref segmentTime);
                 }
                 else
                 {
+                    // Jump to the end
                     segmentIndex = segments.Count - 1;
                     segmentTime = segments[segmentIndex].duration;
                     return 1;

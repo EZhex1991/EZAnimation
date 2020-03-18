@@ -14,10 +14,12 @@ namespace EZhex1991.EZAnimation
         protected EZAnimation animation;
 
         protected SerializedProperty m_Target;
-        protected SerializedProperty m_Loop;
+        protected SerializedProperty m_LoopMode;
         protected SerializedProperty m_PlayOnAwake;
         protected SerializedProperty m_RestartOnEnable;
         protected SerializedProperty m_UpdateMode;
+        protected SerializedProperty m_SegmentIndex;
+
         protected SerializedProperty m_Segments;
         protected ReorderableList segments;
 
@@ -31,10 +33,12 @@ namespace EZhex1991.EZAnimation
             animation = target as EZAnimation;
 
             m_Target = serializedObject.FindProperty("m_Target");
-            m_Loop = serializedObject.FindProperty("m_Loop");
+            m_LoopMode = serializedObject.FindProperty(nameof(m_LoopMode));
             m_PlayOnAwake = serializedObject.FindProperty("m_PlayOnAwake");
             m_RestartOnEnable = serializedObject.FindProperty("m_RestartOnEnable");
             m_UpdateMode = serializedObject.FindProperty("m_UpdateMode");
+            m_SegmentIndex = serializedObject.FindProperty(nameof(m_SegmentIndex));
+
             m_Segments = serializedObject.FindProperty("m_Segments");
             segments = new ReorderableList(serializedObject, m_Segments, true, true, true, true)
             {
@@ -95,10 +99,11 @@ namespace EZhex1991.EZAnimation
             EditorGUILayout.PropertyField(m_Target);
             DrawPropertiesUnderTarget();
 
-            EditorGUILayout.PropertyField(m_Loop);
+            EditorGUILayout.PropertyField(m_LoopMode);
             EditorGUILayout.PropertyField(m_PlayOnAwake);
             EditorGUILayout.PropertyField(m_RestartOnEnable);
             EditorGUILayout.PropertyField(m_UpdateMode);
+            EditorGUILayout.PropertyField(m_SegmentIndex);
 
             EditorGUILayout.FloatField("Time", animation.time);
 
@@ -114,7 +119,7 @@ namespace EZhex1991.EZAnimation
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Play"))
                 {
-                    if (animation.status == Status.Stopped)
+                    if (animation.status == Status.Idle || animation.status == Status.Stopped)
                         animation.Play();
                     else if (animation.status == Status.Paused)
                         animation.Resume();
