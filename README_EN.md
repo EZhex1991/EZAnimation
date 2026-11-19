@@ -26,6 +26,36 @@ Animation data is made up of multiple `Segment` objects. Each Segment represents
 
 The `EZAnimationSegment` base class contains a duration and a time curve. Existing animation components provide CustomEditors for adding, removing, and reordering Segments in the Inspector.
 
+Example:
+
+```csharp
+[Serializable]
+public class EZColorSegment : EZAnimationSegment
+{
+    [SerializeField]
+    private Gradient m_Gradient = EZAnimationUtility.GradientFadeOut();
+
+    public Gradient gradient
+    {
+        get { return m_Gradient; }
+        set { m_Gradient = value; }
+    }
+
+    public Color Evaluate(float time)
+    {
+        return gradient.Evaluate(time);
+    }
+}
+
+public class EZGraphicColorAnimation : EZAnimation<Graphic, EZColorSegment>
+{
+    protected override void OnSegmentUpdate()
+    {
+        target.color = activeSegment.Evaluate(segmentProcess);
+    }
+}
+```
+
 ## Playables
 
 `Runtime/Playables` provides additional Timeline integration for controlling animation time. If Timeline integration is not needed, this folder can be removed.
@@ -33,6 +63,22 @@ The `EZAnimationSegment` base class contains a duration and a time curve. Existi
 ## Samples
 
 The sample scene is located in `Samples~/Demo` and can be imported as `EZAnimation Demo` through the Unity Package Manager.
+
+- EZTransformAnimation
+
+![EZTransformAnimation](Documentation~/Images/EZTransformAnimation.png)
+
+- EZRectTransformAnimation
+
+![EZRectTransformAnimation](Documentation~/Images/EZRectTransformAnimation.png)
+
+- EZGraphicColorAnimation
+
+![EZGraphicColorAnimation](Documentation~/Images/EZGraphicColorAnimation.png)
+
+- EZRendererColorPropertyAnimation
+
+![EZRendererColorPropertyAnimation](Documentation~/Images/EZRendererColorPropertyAnimation.png)
 
 ## Package Structure
 
