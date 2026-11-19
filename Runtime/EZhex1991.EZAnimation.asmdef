@@ -1,0 +1,16 @@
+{
+    "name": "EZhex1991.EZAnimation",
+    "rootNamespace": "EZhex1991.EZAnimation",
+    "references": [
+        "GUID:f06555f75b070af458a003d92f9efb00"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

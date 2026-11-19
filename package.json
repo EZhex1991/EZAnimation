@@ -1,0 +1,23 @@
+{
+  "name": "ezhex1991.ezanimation",
+  "version": "1.2.0",
+  "displayName": "EZAnimation",
+  "description": "Unity animation components and Timeline integrations.",
+  "unity": "2020.3",
+  "dependencies": {
+    "com.unity.timeline": "1.4.8",
+    "com.unity.ugui": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "EZAnimation Demo",
+      "description": "A demo scene and playable asset demonstrating EZAnimation.",
+      "path": "Samples~/Demo"
+    }
+  ],
+  "author": {
+    "name": "EZhex1991",
+    "email": "ezhex1991@outlook.com",
+    "url": "https://github.com/EZhex1991/EZAnimation"
+  }
+}

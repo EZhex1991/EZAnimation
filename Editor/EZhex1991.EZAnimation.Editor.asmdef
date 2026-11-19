@@ -1,0 +1,18 @@
+{
+    "name": "EZhex1991.EZAnimation.Editor",
+    "rootNamespace": "EZhex1991.EZAnimation",
+    "references": [
+        "GUID:2e11df81ad19c0f4e87e5b57156b96fa"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
