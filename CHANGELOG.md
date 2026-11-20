@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.2] - 2026-11-20
+
+### Documentation
+
+- Added the Unity meta file for the changelog.
+
 ## [1.2.1] - 2026-11-19
 
 ### Documentation
